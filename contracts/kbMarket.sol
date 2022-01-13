@@ -79,6 +79,42 @@ contract kbMarket is ReentrancyGuard {
         );
 
         // NFT Transaction
-        
+        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+
+        emit MarketTokenMinted(
+            itemId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            address(0),
+            price,
+            false
+        );
+
     }
+
+    function createMarketSale (
+        address nftContract,
+        uint itemId
+    ) public payable {
+        uint256 price = idToMarketToken[itemId].price;
+        uint256 tokenId = idToMarketToken[itemId].tokenId;
+
+        require(msg.value == price, "Please submit the correct asking price");
+
+        // transfer the amount to the seller
+        idToMarketToken[itemId].seller.transfer(msg.value); // might calculate own percentage here 
+        // transfer the token from contract address to the buyer
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
+        // confirm transaction success in struct
+        idToMarketToken[itemId].sold = true;
+
+        _tokenSold.increment(); // document sale
+
+        // transfer from the owner the price
+        payable(owner).transfer(listingPrice);
+    }
+    
+
 }

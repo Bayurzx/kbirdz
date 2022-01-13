@@ -66,3 +66,13 @@ solidity: {
   - Charge a listing fee
   - Deploying to the matic api
 - Create mapping for the struct. Mapping is similar to objects in js as it is to implement an associative array
+- Create event to tract nft minting `(MarketTokenMinted)`
+- Create function for the nft minting `(mintMarketItem)`
+
+> *Note:* Read about zero address in solidiity here: [Zero Address](https://stackoverflow.com/a/48220805/10690280) 
+
+
+## DApp Smart Contracts (kbMarket)
+- Emit the event created, add the emit event to mintMarketItem()
+- create another function `createMarketSale()`
+- Research own how to calculate your own percentage!
