@@ -52,3 +52,17 @@ solidity: {
 | _mint(address to, uint256 tokenId) | ERC721 |
 | _setTokenURI(uint256 tokenId, string memory _tokenURI) | ERC721URIStorage  |
 | setApprovalForAll(addr, bool) | ERC721 |
+
+
+## NFT Market Smart Contract
+- Imported ERC721, ReentrancyGuard, Counters
+- Counters help determine token id and amount sold
+- Using the `nonReentrant` modifier, gotten from `ReentrancyGuard.sol`
+  - `ReentrancyGuard` basically ensures the function doesn't run twice when called
+- We will be doing the following:
+  - Track number of items minted and no of transaction/sales
+  - Track items not yet sold and total no of items/token
+  - Determine who is the owner of the contract
+  - Charge a listing fee
+  - Deploying to the matic api
+- Create mapping for the struct. Mapping is similar to objects in js as it is to implement an associative array
