@@ -83,3 +83,13 @@ solidity: {
   - Another counter for each individual user
   - Loop through to chck for the purchased NFTs
 - We do the same for the NFTs created by the seller
+
+## Full Testing - DApp Smart Contract Market
+- Setting up test in `test\sample-test.js`
+- Tests
+  - Geting address: NFT and market address
+  - get listing price and auction price
+  - for minting
+  - to make market items
+  - testing create market sale with different addresses
+  - 
