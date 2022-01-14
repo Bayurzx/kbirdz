@@ -116,5 +116,75 @@ contract kbMarket is ReentrancyGuard {
         payable(owner).transfer(listingPrice);
     }
     
+    function fetchMarketTokens( ) view public returns (MarketToken[] memory) {
+         uint itemCount = _tokenIds.current();
+         uint unSoldItemCount = _tokenIds.current() - _tokenSold.current();
+         uint currentIndex = 0;
+
+        //  loop over no. of items created
+        MarketToken[] memory items = new MarketToken[](unSoldItemCount);
+
+        for (uint256 i = 0; i < itemCount; i++) {
+            if (idToMarketToken[i+1].owner == address(0)) {
+                uint currentId = i + 1;
+                MarketToken storage currentItem = idToMarketToken[currentId];
+                items[currentIndex] = currentItem;
+                ++currentIndex;
+            }
+        }
+        return items;
+    }
+
+    function fetchMyNFTs( ) view public returns (MarketToken[] memory) {
+        uint totalItemCount = _tokenIds.current();
+
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (idToMarketToken[i+1].owner == msg.sender) {
+                ++itemCount;
+            }
+        }
+
+        // another loop for the amount you havr purchased, check to see if owner is msg.sender
+        MarketToken[] memory items = new MarketToken[](itemCount);
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (idToMarketToken[i+1].owner == msg.sender) {
+                uint256 currentId = idToMarketToken[i+1].itemId;
+                // current array
+                MarketToken storage currentItem = idToMarketToken[currentId];
+                items[currentIndex] = currentItem;
+                ++currentIndex;
+            }
+        }
+        return items;
+    }
+
+    function fetchItemsCreated( ) view public returns (MarketToken[] memory) {
+        uint totalItemCount = _tokenIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (idToMarketToken[i+1].seller == msg.sender) {
+                ++itemCount;
+            }
+        }
+
+        MarketToken[] memory items = new MarketToken[](itemCount);
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (idToMarketToken[i+1].seller == msg.sender) {
+                uint256 currentId = idToMarketToken[i+1].itemId;
+                // current array
+                MarketToken storage currentItem = idToMarketToken[currentId];
+                items[currentIndex] = currentItem;
+                ++currentIndex;
+            }
+        }
+        return items;
+    }
 
 }

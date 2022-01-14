@@ -72,7 +72,14 @@ solidity: {
 > *Note:* Read about zero address in solidiity here: [Zero Address](https://stackoverflow.com/a/48220805/10690280) 
 
 
-## DApp Smart Contracts (kbMarket)
+## DApp Smart Contracts (kbMarket) II & III & IV
 - Emit the event created, add the emit event to mintMarketItem()
 - create another function `createMarketSale()`
 - Research own how to calculate your own percentage!
+- Create a funciton for minting, buying and selling
+  - Also, return the number of unsold items
+- Return NFTs the users has purchased
+  - Get the total item count
+  - Another counter for each individual user
+  - Loop through to chck for the purchased NFTs
+- We do the same for the NFTs created by the seller
