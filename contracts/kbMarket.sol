@@ -16,7 +16,7 @@ contract kbMarket is ReentrancyGuard {
     Counters.Counter private _tokenIds;
     Counters.Counter private _tokenSold;
 
-    address owner;
+    address payable owner;
 
     uint256 listingPrice = 0.045 ether;
 
@@ -119,12 +119,13 @@ contract kbMarket is ReentrancyGuard {
     function fetchMarketTokens( ) view public returns (MarketToken[] memory) {
          uint itemCount = _tokenIds.current();
          uint unSoldItemCount = _tokenIds.current() - _tokenSold.current();
-         uint currentIndex = 0;
+        //  uint currentIndex = 0; // Issue causing panic code 0x32
 
-        //  loop over no. of items created
         MarketToken[] memory items = new MarketToken[](unSoldItemCount);
 
+        //  loop over no. of items created
         for (uint256 i = 0; i < itemCount; i++) {
+        uint currentIndex;
             if (idToMarketToken[i+1].owner == address(0)) {
                 uint currentId = i + 1;
                 MarketToken storage currentItem = idToMarketToken[currentId];

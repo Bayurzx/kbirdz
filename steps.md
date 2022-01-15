@@ -92,4 +92,11 @@ solidity: {
   - for minting
   - to make market items
   - testing create market sale with different addresses
-  - 
+
+## Hardhat Compiling NFTs & Running Tests
+- Wrote down tests in `test\sample-test.js`
+- There is an issue with the code.
+  - For some reason, the declaration `uint currentIndex = 0;` is not picked up outside the loop. It causes the error `code 0x32`
+
+## DApp Application UI & Styling
+- 
