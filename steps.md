@@ -99,4 +99,22 @@ solidity: {
   - For some reason, the declaration `uint currentIndex = 0;` is not picked up outside the loop. It causes the error `code 0x32`
 
 ## DApp Application UI & Styling
-- 
+- Added this code below to `styles\globals.css`
+``` css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+- Changed the old code in `tailwind.config.js` to this code below, to enable it work. Content was left out in the tutorial
+```js
+module.exports = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
