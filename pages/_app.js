@@ -11,16 +11,16 @@ const KryptoBirdMarketplace = ({Component, pageProps}) => {
         </p>
         <div className="flex mt-4 justify-center">
           <Link href="/">
-            <a href="" className="mr-4">Main Marketplace</a>
+            <a className="mr-4">Main Marketplace</a>
           </Link>
           <Link href="/mint-item">
-            <a href="" className="mr-6">Mint Token</a>
+            <a className="mr-6">Mint Token</a>
           </Link>
           <Link href="/my-nfts">
-            <a href="" className="mr-6">My NFTs</a>
+            <a className="mr-6">My NFTs</a>
           </Link>
           <Link href="/account-dashboard">
-            <a href="" className="mr-4">AccountDashboard</a>
+            <a className="mr-4">Account Dashboard</a>
           </Link>
         </div>
       </nav>
