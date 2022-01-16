@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/app.css'
 import Link from "next/link";
 
 const KryptoBirdMarketplace = ({Component, pageProps}) => {
