@@ -290,3 +290,7 @@ eth_chainId
 eth_getTransactionReceipt
 
 ```
+
+## Loading NFTs To The Market Function
+- Some naming are different from the tutorial
+- created the loadNfts function
