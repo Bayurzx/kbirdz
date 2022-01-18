@@ -17,6 +17,7 @@ a:active {
 
 body {
     background-image: url('../images/8.gif');
+    background-position: center top;
     background-repeat: no-repeat;
     background-size: cover;
     /* background-position: center; */

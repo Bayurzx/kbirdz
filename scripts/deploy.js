@@ -26,8 +26,8 @@ async function main() {
   await nft.deployed();
   console.log("NFT contract deployed to:", nft.address);
 
-  let config = `export const kbMarketAddress = ${kbMarket.address};
-export const nftAddress = ${nft.address};`
+  let config = `export const kbMarketAddress = "${kbMarket.address}";
+export const nftAddress = "${nft.address}";`
 
   let data = JSON.stringify(config)
   fs.writeFileSync('config.js', JSON.parse(data))

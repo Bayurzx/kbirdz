@@ -26,7 +26,7 @@ contract kbMarket is ReentrancyGuard {
     }
 
     struct MarketToken {
-        uint256 itemId; // reminder uint and uint256 are the same
+        uint itemId; // reminder uint and uint256 are the same
         address nftContract;
         uint256 tokenId;
         address payable seller;
@@ -40,7 +40,7 @@ contract kbMarket is ReentrancyGuard {
 
     // listen to event from the frontend
     event MarketTokenMinted(
-        uint256 indexed itemId,
+        uint indexed itemId,
         address indexed nftContract,
         uint256 indexed tokenId,
         address seller,
@@ -96,9 +96,9 @@ contract kbMarket is ReentrancyGuard {
     function createMarketSale (
         address nftContract,
         uint itemId
-    ) public payable {
-        uint256 price = idToMarketToken[itemId].price;
-        uint256 tokenId = idToMarketToken[itemId].tokenId;
+    ) public payable nonReentrant {
+        uint price = idToMarketToken[itemId].price;
+        uint tokenId = idToMarketToken[itemId].tokenId;
 
         require(msg.value == price, "Please submit the correct asking price");
 
@@ -106,6 +106,7 @@ contract kbMarket is ReentrancyGuard {
         idToMarketToken[itemId].seller.transfer(msg.value); // might calculate own percentage here 
         // transfer the token from contract address to the buyer
         IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+        idToMarketToken[itemId].owner = payable(msg.sender);
 
         // confirm transaction success in struct
         idToMarketToken[itemId].sold = true;
@@ -119,13 +120,12 @@ contract kbMarket is ReentrancyGuard {
     function fetchMarketTokens( ) view public returns (MarketToken[] memory) {
          uint itemCount = _tokenIds.current();
          uint unSoldItemCount = _tokenIds.current() - _tokenSold.current();
-        //  uint currentIndex = 0; // Issue causing panic code 0x32
+         uint currentIndex = 0; // Issue causing panic code 0x32
 
         MarketToken[] memory items = new MarketToken[](unSoldItemCount);
 
         //  loop over no. of items created
         for (uint256 i = 0; i < itemCount; i++) {
-        uint currentIndex;
             if (idToMarketToken[i+1].owner == address(0)) {
                 uint currentId = i + 1;
                 MarketToken storage currentItem = idToMarketToken[currentId];

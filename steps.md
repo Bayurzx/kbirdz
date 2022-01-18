@@ -97,6 +97,7 @@ solidity: {
 - Wrote down tests in `test\sample-test.js`
 - There is an issue with the code.
   - For some reason, the declaration `uint currentIndex = 0;` is not picked up outside the loop. It causes the error `code 0x32`
+  - I was able to solve this issue after commit: 6194d0e7b91a5440acceff9b4c8c059ab3f1bf91. I forgot to add this line `idToMarketToken[itemId].owner = payable(msg.sender);`
 
 ## DApp Application UI & Styling
 - Added this code below to `styles\globals.css`
@@ -294,3 +295,8 @@ eth_getTransactionReceipt
 ## Loading NFTs To The Market Function
 - Some naming are different from the tutorial
 - created the loadNfts function
+
+## Mapping Out NFTs with Tailwind & NexJs
+- Added condition statement to display no data component in pages\index.js:ln 70, Col 3
+- Fixed errors in deploy.js, forgot to make addresses string
+- 
