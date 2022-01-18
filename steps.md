@@ -299,4 +299,8 @@ eth_getTransactionReceipt
 ## Mapping Out NFTs with Tailwind & NexJs
 - Added condition statement to display no data component in pages\index.js:ln 70, Col 3
 - Fixed errors in deploy.js, forgot to make addresses string
-- 
+
+## File Hosting with IPFS
+- Copied link for IPFS from infura at [blog](https://blog.infura.io/getting-started-with-infuras-ipfs-service-updated-june-2021/)
+- Check out [mint-items.js](..\pages\mint-item.js)
+

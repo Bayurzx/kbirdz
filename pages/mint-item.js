@@ -1,112 +1,60 @@
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import Web3Modal from 'web3modal'
+import {create as ipfsHttpClient} from 'ipfs-http-client';
 import { kbMarketAddress, nftAddress } from '../config';
 
 import kbMarket from '../artifacts/contracts/kbMarket.sol/kbMarket.json';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
+import { useRouter } from 'next/router';
 
-export default function Home() {
-  const [nfts, setNfts] = useState([]);
-  const [loading, setLoading] = useState(false);
+const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0/');
 
-  useEffect(() => {
-    loadNfts();
-  }, [])
+export default function MintItem() {
+  const [fileUrl, setFileUrl] = useState(null);
+  const [formInput, setFormInput] = useState({
+    price: "",
+    name: "",
+    description: "",
+  });
+  const router = useRouter()
 
-  const loadNfts = async () => {
-    // ***provider, tokenContract, marketContract, data for our marketItems***
+  // set up a fnuction to fireoff when we update files in out form
 
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider);
-    const marketContract = new ethers.Contract(kbMarketAddress, kbMarket.abi, provider);
-    const data = await marketContract.fetchMarketTokens()
-
-    const items = await Promise.all(data.map(async () => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId)
-      // we want to get the token metadata
-      const meta = await axios.get(tokenUri);
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-
-      let item = {
-        price,
-        tokenId: i.tokenId.toNumber(),
-        seller: i.seller,
-        owner: i.owner,
-        image: meta.data.image,
-        name: meta.data.name,
-        description: meta.data.description,
-
-      }
-
-      return item;
-
-    }))
-
-    setNfts(items);
-    setLoading(false);
-
+  const onChange = async (e) => {
+    const file = e.target.files[0];
+    try {
+      const added = await client.add(file, {
+        progress: (prog) => console.log(`recieved: ${prog}`)
+      });
+  
+      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`
+      setFileUrl(url);
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // function to buy NFTs for the market
-
-  const buyNFT = async (nft) => {
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    const contract = new ethers.Contract(kbMarketAddress, kbMarket.abi, signer)
-
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
-    const transaction = await contract.createMarketSale(nftAddress, nft.tokenId, {
-      value: price
+  const createMarket = async () => {
+    const {name, description, price} = formInput
+    if (!name || !description || !price || !fileUrl) return;
+    // upload to ipfs
+    const data = JSON.stringify({
+      name, description, image:fileUrl
     })
 
-    await transaction.wait()
-    loadNfts() // to reload our nfts after there has been a buy
+    try {
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`
+      // run a function that creates sale and passes in the url
+      createSale(url)
+
+    } catch (error) {
+      console.log('Error uplaoding file: ', error);
+    }
 
   }
-  if (!loading && !nfts.length) {
-    return (
-      <h1 className="px-20 py-7 text-4x1">No NFTs in marketplace</h1>
-    )
-  }
 
 
-
-  return (
-    <>
-      <div className="flex justify-center">
-        <div className="px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-            {
-              nfts.map((nft, i) => (
-                <div key={i} className="border shadow rounded-x1 overflow-hidden">
-                  <img src={nft.image} alt="" />
-                  <div className="p-4">
-                    <p style={{height: '64px'}} className="text-3x1 font-semibold">
-                      {nft.name}
-                    </p>
-                    <div style={{height:'72px', overflow:'hidden'}}>
-                      <p className="text-gray-400">{nft.description} </p>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-black">
-                    <p className="text-3x-1 mb-4 font-bold text-white">{nft.price} ETH</p>
-                    <button 
-                      className="w-full bg-purple-500 text-white font-bold py-3 px-12 rounded"
-                      onClick={() => buyNFT(nft)}
-                    >
-                      Buy
-                    </button>
-                  </div>
-                </div>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </>
-  )
 }
