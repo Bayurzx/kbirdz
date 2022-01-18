@@ -56,5 +56,31 @@ export default function MintItem() {
 
   }
 
+  const createSale = async (url) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    // we want to create the token
+    let contract = new ethers.Contract(nftAddress, NFT.abi, signer)
+    let transaction = await contract.mintToken(url);
+    let tx = await transaction.wait()
+    let event = tx.events[0]
+    let value = event.args[2]
+    let tokenId = value.toNumber()
+    const price = ethers.utils.parseUnits(formInput.price, 'ether')
+
+    // list the items for sale in teh marketplace
+    contract = new ethers.Contract(kbMarketAddress, kbMarket.abi, signer)
+    let listingPrice = await contract.getListingPrice()
+    listingPrice = listingPrice.toString()
+    // 
+    transaction = await contract.makeMarketItem(nftAddress, tokenId, price, {value: listingPrice})
+    await transaction.wait()
+
+    router.push('./')
+  }
+  
 
 }

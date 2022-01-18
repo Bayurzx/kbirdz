@@ -304,3 +304,6 @@ eth_getTransactionReceipt
 - Copied link for IPFS from infura at [blog](https://blog.infura.io/getting-started-with-infuras-ipfs-service-updated-june-2021/)
 - Check out [mint-items.js](..\pages\mint-item.js)
 
+## Minting NFTs Final Functionality
+- created the createSale function
+- 
