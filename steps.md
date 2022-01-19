@@ -321,4 +321,6 @@ eth_getTransactionReceipt
 
 ## Final DApp Code Part II - Final Conclusion
 - Added dashboard, made slight changes
+- Notice that after minting, we get directed to `Marketplace`. That is thanks to `router.push('./')`
+- Notice that next automatically sets our routes. It detects the name of the file in pages and routes there
 - 

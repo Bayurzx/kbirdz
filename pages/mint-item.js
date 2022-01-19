@@ -79,7 +79,7 @@ export default function MintItem() {
     transaction = await contract.makeMarketItem(nftAddress, tokenId, price, {value: listingPrice})
     await transaction.wait()
 
-    router.push('./')
+    router.push('./');
   }
 
   return (
