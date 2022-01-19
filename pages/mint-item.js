@@ -8,7 +8,7 @@ import kbMarket from '../artifacts/contracts/kbMarket.sol/kbMarket.json';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import { useRouter } from 'next/router';
 
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0/');
+const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
 export default function MintItem() {
   const [fileUrl, setFileUrl] = useState(null);
@@ -21,14 +21,14 @@ export default function MintItem() {
 
   // set up a fnuction to fireoff when we update files in out form
 
-  const onChange = async (e) => {
+  const onFileChange = async (e) => {
     const file = e.target.files[0];
     try {
       const added = await client.add(file, {
         progress: (prog) => console.log(`recieved: ${prog}`)
       });
   
-      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`
       setFileUrl(url);
       
     } catch (error) {
@@ -46,12 +46,12 @@ export default function MintItem() {
 
     try {
       const added = await client.add(data);
-      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`
       // run a function that creates sale and passes in the url
       createSale(url)
 
     } catch (error) {
-      console.log('Error uplaoding file: ', error);
+      console.log('Error uploading file: ', error);
     }
 
   }
@@ -81,6 +81,49 @@ export default function MintItem() {
 
     router.push('./')
   }
+
+  return (
+    <div className="flex justify-center mt-12">
+      <div className="w-1/2 flex flex-col p-16 bg-purple-200">
+        <input 
+          type="text" 
+          placeholder='Asset Name'
+          className="mt-8 border rounded p-4" 
+          onChange={e => setFormInput({...formInput, name: e.target.value})}
+        />
+        <textarea 
+          type="text" 
+          placeholder='Asset Description'
+          className="mt-8 border rounded p-4" 
+          onChange={e => setFormInput({...formInput, description: e.target.value})}
+        />
+        <input 
+          type="text" 
+          placeholder='Asset Price in Eth'
+          className="mt-8 border rounded p-4" 
+          onChange={e => setFormInput({...formInput, price: e.target.value})}
+        />
+        <input 
+          type="file" 
+          name='Asset'
+          className="mt-4" 
+          onChange={onFileChange}
+        /> 
+        {
+          fileUrl && (
+            <img src={fileUrl} className='rounded mt-4' width='350px' />
+          )
+        }
+        <button 
+          className="font-bold mt-5 bg-purple-500 text-white rounded py-3 shadow-lg"
+          onClick={createMarket}
+        >
+          Mint NFT
+        </button>
+      </div>
+    </div>
+
+  )
   
 
 }

@@ -306,4 +306,16 @@ eth_getTransactionReceipt
 
 ## Minting NFTs Final Functionality
 - created the createSale function
-- 
+
+##  Front End Form For Blockchain Interaction
+- Created a form in `pages\mint-item.js` along with the necessary function
+
+## Display Purchased NFTs on DApp
+- create a new file called `pages\my-nfts.js`
+  - Basically copied the `pages\index.js`
+- Made some changes like
+  - Removed the buyNFTs
+  - Removed the button
+  - created the signer variable
+  - changed form provider to signer in the defined `marketContract` variable
+  - 

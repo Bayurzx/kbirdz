@@ -7,7 +7,7 @@ import { kbMarketAddress, nftAddress } from '../config';
 import kbMarket from '../artifacts/contracts/kbMarket.sol/kbMarket.json';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 
-export default function Home() {
+export default function MyNfts() {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,12 +16,18 @@ export default function Home() {
   }, [])
 
   const loadNfts = async () => {
-    // ***provider, tokenContract, marketContract, data for our marketItems***
+    // Want to get the msg.sender hook up to the signer to display the nfts
 
-    const provider = new ethers.providers.JsonRpcProvider();
+
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+
+
     const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider);
-    const marketContract = new ethers.Contract(kbMarketAddress, kbMarket.abi, provider);
-    const data = await marketContract.fetchMarketTokens()
+    const marketContract = new ethers.Contract(kbMarketAddress, kbMarket.abi, signer);
+    const data = await marketContract.fetchMyNFTs()
 
     const items = await Promise.all(data.map(async (i) => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
@@ -49,27 +55,10 @@ export default function Home() {
 
   }
 
-  // function to buy NFTs for the market
-
-  const buyNFT = async (nft) => {
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    const contract = new ethers.Contract(kbMarketAddress, kbMarket.abi, signer)
-
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
-    const transaction = await contract.createMarketSale(nftAddress, nft.tokenId, {
-      value: price
-    })
-
-    await transaction.wait()
-    loadNfts() // to reload our nfts after there has been a buy
-
-  }
+  
   if (!loading && !nfts.length) {
     return (
-      <h1 className="px-20 py-7 text-4x1">No NFTs in marketplace</h1>
+      <h1 className="px-20 py-7 text-4x1">You do not own any NFTs 😢</h1>
     )
   }
 
@@ -94,12 +83,7 @@ export default function Home() {
                   </div>
                   <div className="p-4 bg-black">
                     <p className="text-3x-1 mb-4 font-bold text-white">{nft.price} ETH</p>
-                    <button 
-                      className="w-full bg-purple-500 text-white font-bold py-3 px-12 rounded"
-                      onClick={() => buyNFT(nft)}
-                    >
-                      Buy
-                    </button>
+                    
                   </div>
                 </div>
               ))
