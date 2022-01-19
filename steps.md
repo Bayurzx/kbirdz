@@ -318,4 +318,7 @@ eth_getTransactionReceipt
   - Removed the button
   - created the signer variable
   - changed form provider to signer in the defined `marketContract` variable
-  - 
+
+## Final DApp Code Part II - Final Conclusion
+- Added dashboard, made slight changes
+- 

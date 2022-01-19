@@ -85,6 +85,8 @@ export default function MintItem() {
   return (
     <div className="flex justify-center mt-12">
       <div className="w-1/2 flex flex-col p-16 bg-purple-200">
+        <h1 className="py-2" style={{ fontSize: '26px', backgroundColor: 'white', padding: '20px', fontWeight: 'bold', color: "purple" }}>Mint Tokens</h1>
+
         <input 
           type="text" 
           placeholder='Asset Name'

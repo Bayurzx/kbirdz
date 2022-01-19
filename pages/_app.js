@@ -19,7 +19,7 @@ const KryptoBirdMarketplace = ({Component, pageProps}) => {
           <Link href="/my-nfts">
             <a className="mr-6">My NFTs</a>
           </Link>
-          <Link href="/account-dashboard">
+          <Link href="/dashboard">
             <a className="mr-4">Account Dashboard</a>
           </Link>
         </div>
